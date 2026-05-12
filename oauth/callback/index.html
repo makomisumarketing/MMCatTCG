@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TikTok sign-in — callback</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.5; max-width: 36rem; margin: 2rem auto; padding: 0 1rem; color: #111; }
+    h1 { font-size: 1.25rem; }
+    .ok { color: #0d6d3b; }
+    .err { color: #b00020; }
+    pre, textarea {
+      width: 100%; box-sizing: border-box; font-size: 0.8rem;
+      padding: 0.75rem; background: #f4f4f5; border: 1px solid #ccc; border-radius: 6px;
+      word-break: break-all; white-space: pre-wrap;
+    }
+    textarea { min-height: 5rem; font-family: ui-monospace, monospace; }
+    .muted { color: #555; font-size: 0.9rem; }
+    a { color: #0b57d0; }
+  </style>
+</head>
+<body>
+  <h1>MMCat TCG Uploader — TikTok callback</h1>
+  <p class="muted">Registered redirect URI: <code>https://mmcattcg.makomisumarketing.com/oauth/callback</code></p>
+
+  <div id="error" class="err" style="display:none;"></div>
+  <div id="success" style="display:none;">
+    <p class="ok">Authorization returned. Copy the <strong>code</strong> below, then exchange it for tokens in your local tool (or close this tab if you’re done).</p>
+    <p><label for="codebox"><strong>Authorization code</strong></label></p>
+    <textarea id="codebox" readonly></textarea>
+    <p class="muted"><strong>state</strong> (if present):</p>
+    <pre id="statebox"></pre>
+  </div>
+  <div id="empty" style="display:none;">
+    <p>No <code>code</code> in this URL yet. Start TikTok login from your app; after you approve, TikTok will send you back here with a code in the address bar.</p>
+    <p><a href="/">Back to site</a></p>
+  </div>
+
+  <script>
+    (function () {
+      var q = new URLSearchParams(window.location.search);
+      var code = q.get("code");
+      var state = q.get("state");
+      var err = q.get("error") || q.get("error_description");
+
+      if (err) {
+        document.getElementById("error").style.display = "block";
+        document.getElementById("error").textContent = "Error: " + err;
+        return;
+      }
+      if (code) {
+        document.getElementById("success").style.display = "block";
+        document.getElementById("codebox").value = code;
+        document.getElementById("statebox").textContent = state || "(none)";
+        document.getElementById("codebox").select();
+        return;
+      }
+      document.getElementById("empty").style.display = "block";
+    })();
+  </script>
+</body>
+</html>
